@@ -1,21 +1,25 @@
 version: '3'
 
 services:
-    db:
-        image: mysql:8.0.20
-        command: --default-authentication-plugin=mysql_native_password
-        volumes:
-            - "db_app:/var/lib/mysql"
+    api_db:
+        container_name: ${PROJECT_NAME}_api_db
+        build:
+            context: .
+            dockerfile: docker/db/Dockerfile
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         ports:
-            - 3306:3306
-        networks:
-            - symfony
-    php:
+            - 3308:3306
+        volumes:
+            - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - /var/lib/mysql
+
+    symfony:
+        container_name: ${PROJECT_NAME}_symfony
+ #       restart: on-failure
         build:
             context: .
             dockerfile: docker/php/Dockerfile
@@ -23,21 +27,17 @@ services:
                 TIMEZONE: ${TIMEZONE}
         volumes:
             - ./symfony/:/var/www/symfony/
-        networks:
-            - symfony
-    nginx:
+
+
+    api_nginx:
+        container_name: ${PROJECT_NAME}_nginx
+#        restart: on-failure
+        depends_on: 
+            - symfony 
         build:
             context: .
             dockerfile: docker/nginx/Dockerfile
         volumes:
             - ./symfony/:/var/www/symfony/
         ports:
-            - 80:80
-        networks:
-            - symfony
-
-volumes:
-    db_app:
-
-networks:
-    symfony:
+            - 8080:80
