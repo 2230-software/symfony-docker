@@ -41,3 +41,25 @@ services:
             - ./symfony/:/var/www/symfony/
         ports:
             - 8080:80
+
+    dw:
+        container_name: ${PROJECT_NAME}_dw
+        build:
+            context: .
+            dockerfile: docker/postgres/Dockerfile
+        environment: 
+            POSTGRES_DB: "dw"
+            POSTGRES_USER: "dw_user"
+            POSTGRES_PASSWORD: "dw_pass"
+        volumes:
+        - ./postgres/:/tmp
+        - /var/lib/postgresql/data
+
+    pgadmin4:
+        container_name: ${PROJECT_NAME}_pgadmin
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "dw@unab"
+            PGADMIN_DEFAULT_PASSWORD: "dw_pass"
+        ports:
+        - "80:80"

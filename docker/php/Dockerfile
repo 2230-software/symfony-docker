@@ -39,4 +39,4 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony/b
 RUN git config --global user.email "${GIT_MAIL}"
 
 WORKDIR /var/www/symfony
-RUN symfony new ${PROJECT_NAME} --dir=.
+#RUN symfony new ${PROJECT_NAME} --dir=.
