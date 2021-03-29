@@ -38,5 +38,6 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony/b
 
 RUN git config --global user.email "${GIT_MAIL}"
 
+RUN apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql
 WORKDIR /var/www/symfony
 #RUN symfony new ${PROJECT_NAME} --dir=.
