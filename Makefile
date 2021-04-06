@@ -45,5 +45,7 @@ install:
 	docker exec -it $(PROJECT_NAME)_symfony mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 	docker exec -it $(PROJECT_NAME)_symfony symfony new symfony --dir=/var/www/symfony
 
+reload-nginx:
+	docker exec -ti  $(PROJECT_NAME)_nginx nginx -s reload
 
 
