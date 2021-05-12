@@ -14,7 +14,7 @@ services:
         ports:
             - 3308:3306
         volumes:
-            - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./dumps/api:/docker-entrypoint-initdb.d
             - /var/lib/mysql
 
     symfony:
@@ -51,20 +51,20 @@ services:
             context: .
             dockerfile: docker/postgres/Dockerfile
         environment: 
-            POSTGRES_DB: "dw"
-            POSTGRES_USER: "dw_user"
-            POSTGRES_PASSWORD: "dw_pass"
+            POSTGRES_DB: "postgres"
+            POSTGRES_USER: "postgres"
+            POSTGRES_PASSWORD: "postgres"
         volumes:
-        - ./postgres/:/tmp
         - /var/lib/postgresql/data
+        - ./dumps/dw:/docker-entrypoint-initdb.d
         ports:
-            - "5433:5432"
+            - "5434:5432"
 
     pgadmin4:
         container_name: ${PROJECT_NAME}_pgadmin
         image: dpage/pgadmin4
         environment:
-            PGADMIN_DEFAULT_EMAIL: "dw@unab"
+            PGADMIN_DEFAULT_EMAIL: "dw@unab.com"
             PGADMIN_DEFAULT_PASSWORD: "dw_pass"
         ports:
         - "81:80"

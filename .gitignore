@@ -1,1 +1,3 @@
 symfony/
+*.sql
+*.csv
