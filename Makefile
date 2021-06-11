@@ -5,7 +5,7 @@ default: up
 
 up:
 	@echo "Starting up containers for $(PROJECT_NAME)..."
-	docker-compose pull
+#	docker-compose pull
 	docker-compose up -d --remove-orphans
 
 force-recreate:
