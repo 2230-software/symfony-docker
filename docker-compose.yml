@@ -45,21 +45,6 @@ services:
         ports:
             - 80:80
 
-    dw:
-        container_name: ${PROJECT_NAME}_dw
-        build:
-            context: .
-            dockerfile: docker/postgres/Dockerfile
-        environment: 
-            POSTGRES_DB: "postgres"
-            POSTGRES_USER: "postgres"
-            POSTGRES_PASSWORD: "postgres"
-        volumes:
-        - /var/lib/postgresql/data
-        - ./dumps/dw:/docker-entrypoint-initdb.d
-        ports:
-            - "5434:5432"
-
     pgadmin4:
         container_name: ${PROJECT_NAME}_pgadmin
         image: dpage/pgadmin4
