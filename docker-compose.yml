@@ -2,7 +2,7 @@ version: '3'
 
 services:
     api_db:
-        container_name: ${PROJECT_NAME}_api_db
+        container_name: ${MYSQL_HOST}
         build:
             context: .
             dockerfile: docker/db/Dockerfile
@@ -14,7 +14,7 @@ services:
         ports:
             - 3308:3306
         volumes:
-            - ./dumps/api:/docker-entrypoint-initdb.d
+            - ./docker/db/dumps:/docker-entrypoint-initdb.d
             - /var/lib/mysql
 
     symfony:
@@ -25,8 +25,18 @@ services:
             dockerfile: docker/php/Dockerfile
             args:
                 TIMEZONE: ${TIMEZONE}
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_HOST: ${MYSQL_HOST}
+            DW_DATABASE: ${DW_DATABASE}
+            DW_USER: ${DW_USER}
+            DW_PASSWORD: ${DW_PASSWORD}
+            DW_HOST: ${DW_HOST}
         volumes:
             - ./symfony/:/var/www/symfony/
+            - .symfony.env.local:/var/www/symfony/.env.local
 
 
     api_nginx:
@@ -46,17 +56,17 @@ services:
             - 80:80
 
     dw:
-        container_name: ${PROJECT_NAME}_dw
+        container_name: ${DW_HOST}
         build:
             context: .
             dockerfile: docker/postgres/Dockerfile
         environment: 
-            POSTGRES_DB: "postgres"
-            POSTGRES_USER: "postgres"
-            POSTGRES_PASSWORD: "postgres"
+            POSTGRES_DB: ${DW_DATABASE}
+            POSTGRES_USER: ${DW_USER}
+            POSTGRES_PASSWORD: ${DW_PASSWORD}
         volumes:
         - /var/lib/postgresql/data
-        - ./dumps/dw:/docker-entrypoint-initdb.d
+        - ./docker/postgres/dumps:/docker-entrypoint-initdb.d
         ports:
             - "5434:5432"
 
