@@ -34,6 +34,7 @@ services:
             DW_USER: ${DW_USER}
             DW_PASSWORD: ${DW_PASSWORD}
             DW_HOST: ${DW_HOST}
+            JWT_PASSPHRASE: ${JWT_PASSPHRASE}
         volumes:
             - ./symfony/:/var/www/symfony/
             - .symfony.env.local:/var/www/symfony/.env.local
