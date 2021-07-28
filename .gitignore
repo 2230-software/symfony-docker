@@ -1,3 +1,4 @@
 symfony/
 *.sql
 *.csv
+.symfony.env.local
