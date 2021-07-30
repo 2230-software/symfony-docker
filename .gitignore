@@ -1,3 +1,5 @@
 symfony/
 *.sql
 *.csv
+certbot/
+docker/nginx/.env
