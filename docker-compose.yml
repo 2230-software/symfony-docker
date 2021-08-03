@@ -2,7 +2,7 @@ version: '3'
 
 services:
     api_db:
-        container_name: ${PROJECT_NAME}_api_db
+        container_name: ${MYSQL_HOST}
         build:
             context: .
             dockerfile: docker/db/Dockerfile
@@ -14,7 +14,7 @@ services:
         ports:
             - 3308:3306
         volumes:
-            - ./dumps/api:/docker-entrypoint-initdb.d
+            - ./docker/db/dumps:/docker-entrypoint-initdb.d
             - /var/lib/mysql
 
     symfony:
@@ -25,8 +25,18 @@ services:
             dockerfile: docker/php/Dockerfile
             args:
                 TIMEZONE: ${TIMEZONE}
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_HOST: ${MYSQL_HOST}
+            DW_DATABASE: ${DW_DATABASE}
+            DW_USER: ${DW_USER}
+            DW_PASSWORD: ${DW_PASSWORD}
+            DW_HOST: ${DW_HOST}
         volumes:
             - ./symfony/:/var/www/symfony/
+            - .symfony.env.local:/var/www/symfony/.env.local
 
 
     api_nginx:
@@ -40,10 +50,12 @@ services:
         volumes:
             - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./docker/nginx/upstream.conf:/etc/nginx/conf.d/upstream.conf
-            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./docker/nginx/api.conf:/etc/nginx/conf.d/api.conf
+            - ./docker/nginx/search-cuit.conf:/etc/nginx/conf.d/search-cuit.conf
             - ./symfony/:/var/www/symfony/
             - ./docker/nginx/certbot/conf:/etc/letsencrypt
             - ./docker/nginx/certbot/www:/var/www/certbot
+            - ./search-cuit/dist/:/var/www/cuit-search/
         ports:
             - 80:80
             - 443:443

@@ -1,5 +1,7 @@
 symfony/
 *.sql
 *.csv
+.symfony.env.local
 certbot/
 docker/nginx/.env
+search-cuit/
