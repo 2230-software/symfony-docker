@@ -50,10 +50,12 @@ services:
         volumes:
             - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./docker/nginx/upstream.conf:/etc/nginx/conf.d/upstream.conf
-            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./docker/nginx/api.conf:/etc/nginx/conf.d/api.conf
+            - ./docker/nginx/search-cuit.conf:/etc/nginx/conf.d/search-cuit.conf
             - ./symfony/:/var/www/symfony/
             - ./docker/nginx/certbot/conf:/etc/letsencrypt
             - ./docker/nginx/certbot/www:/var/www/certbot
+            - ./search-cuit/dist/:/var/www/cuit-search/
         ports:
             - 80:80
             - 443:443

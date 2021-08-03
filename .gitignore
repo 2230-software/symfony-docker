@@ -4,3 +4,4 @@ symfony/
 .symfony.env.local
 certbot/
 docker/nginx/.env
+search-cuit/
