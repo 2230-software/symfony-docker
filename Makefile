@@ -1,4 +1,6 @@
 include .env
+include .symfony.env.local
+
 .PHONY: up down stop prune ps shell drush logs bash
 
 default: up
@@ -39,6 +41,11 @@ bash:
 
 bash-root:
 	docker exec -ti -u root $(PROJECT_NAME)_symfony /bin/bash
+
+backup-api-db:
+	@echo "Iniciando backup de BD $(API_DB_NAME)"
+	@docker exec api_api_db mysqldump -u $(API_DB_USER) -p$(API_DB_PASS) $(API_DB_NAME) | gzip > $(API_DB_BACKUP_DESTINATION)/api_backup_`date +%F`.sql.gz
+	@echo "Se genero el backup en $(API_DB_BACKUP_DESTINATION)"
 
 install:
 	docker exec -it $(PROJECT_NAME)_symfony curl -sS https://get.symfony.com/cli/installer | bash
