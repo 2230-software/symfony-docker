@@ -7,8 +7,11 @@ default: up
 
 up:
 	@echo "Starting up containers for $(PROJECT_NAME)..."
-#	docker-compose pull
 	docker-compose up -d --remove-orphans
+
+up-datawarehouse:
+	@echo "Starting up only datawarehouse db and pgadmin for $(PROJECT_NAME)..."
+	docker-compose up -d dw pgadmin4
 
 force-recreate:
 	@echo "Starting up containers for $(PROJECT_NAME)..."
