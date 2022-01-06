@@ -3,7 +3,6 @@ version: '3'
 services:
     api_db:
         container_name: ${MYSQL_HOST}
-        restart: always
         build:
             context: .
             dockerfile: docker/db/Dockerfile
@@ -20,7 +19,6 @@ services:
 
     symfony:
         container_name: ${PROJECT_NAME}_symfony
-        restart: always
         build:
             context: .
             dockerfile: docker/php/Dockerfile
@@ -41,7 +39,6 @@ services:
 
     api_nginx:
         container_name: ${PROJECT_NAME}_nginx
-        restart: always
         depends_on: 
             - symfony 
         build:
@@ -62,21 +59,10 @@ services:
         command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     certbot:
         image: certbot/certbot
-        restart: always
         volumes:
             - ./docker/nginx/certbot/conf:/etc/letsencrypt
             - ./docker/nginx/certbot/www:/var/www/certbot
         entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-
-    pgadmin4:
-        container_name: ${PROJECT_NAME}_pgadmin
-        image: dpage/pgadmin4
-        restart: always
-        environment:
-            PGADMIN_DEFAULT_EMAIL: "dw@unab.com"
-            PGADMIN_DEFAULT_PASSWORD: "dw_pass"
-        ports:
-        - "81:80"
 
 volumes:
     api_db:
