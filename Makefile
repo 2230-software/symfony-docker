@@ -5,6 +5,7 @@ include .symfony.env.local
 
 default: up
 
+### Development ###
 up:
 	@echo "Starting up containers for $(PROJECT_NAME)..."
 	docker-compose -f docker-compose.yml up -d --remove-orphans
@@ -50,6 +51,30 @@ prune:
 	@echo "Removing containers for $(PROJECT_NAME)..."
 	@docker-compose -f docker-compose.yml down -v
 
+### Production ###
+down-prod: stop-prod
+
+up-prod:
+	@echo "Starting up containers for $(PROJECT_NAME)..."
+	docker-compose -f docker-compose.yml -f docker-compose-prod.yml up -d --remove-orphans
+
+stop-prod:
+	@echo "Stopping containers for $(PROJECT_NAME)..."
+	@docker-compose -f docker-compose.yml -f docker-compose-prod.yml stop
+
+logs-prod:
+	@echo "Stopping containers for $(PROJECT_NAME)..."
+	@docker-compose -f docker-compose.yml -f docker-compose-prod.yml logs -f
+
+build-prod:
+	@echo "Stopping containers for $(PROJECT_NAME)..."
+	@docker-compose -f docker-compose.yml -f docker-compose-prod.yml build
+
+prune-prod:
+	@echo "Removing containers for $(PROJECT_NAME)..."
+	@docker-compose -f docker-compose.yml -f docker-compose-prod.yml down -v
+
+### Common ###
 ps:
 	@docker ps --filter name='$(PROJECT_NAME)*'
 

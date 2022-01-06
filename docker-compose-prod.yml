@@ -1,0 +1,10 @@
+version: '3'
+services:
+    api_db:
+        restart: always
+    symfony:
+        restart: always
+    api_nginx:
+        restart: always
+    certbot:
+        restart: always

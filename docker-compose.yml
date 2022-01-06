@@ -19,7 +19,6 @@ services:
 
     symfony:
         container_name: ${PROJECT_NAME}_symfony
- #       restart: on-failure
         build:
             context: .
             dockerfile: docker/php/Dockerfile
@@ -41,7 +40,6 @@ services:
 
     api_nginx:
         container_name: ${PROJECT_NAME}_nginx
-#        restart: on-failure
         depends_on: 
             - symfony 
         build:
