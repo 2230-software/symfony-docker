@@ -1,40 +1,54 @@
 include .env
 include .symfony.env.local
 
-.PHONY: up down stop prune ps shell drush logs bash
+.PHONY: up up-datawarehouse-only up-with-datawarehouse down down-datawarehouse-only down-with-datawarehouse stop prune ps shell drush logs bash
 
 default: up
 
 up:
 	@echo "Starting up containers for $(PROJECT_NAME)..."
-	docker-compose up -d --remove-orphans
+	docker-compose -f docker-compose.yml up -d --remove-orphans
 
-up-datawarehouse:
+up-datawarehouse-only:
 	@echo "Starting up only datawarehouse db and pgadmin for $(PROJECT_NAME)..."
-	docker-compose up -d dw pgadmin4
+	docker-compose -f docker-compose-dw.yml up -d
+
+up-with-datawarehouse:
+	@echo "Starting up only datawarehouse db and pgadmin for $(PROJECT_NAME)..."
+	docker-compose -f docker-compose.yml -f docker-compose-dw.yml up -d
 
 force-recreate:
 	@echo "Starting up containers for $(PROJECT_NAME)..."
 	docker-compose pull
-	docker-compose up -d --force-recreate --remove-orphans
+	docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans
 
 down: stop
+down-datawarehouse-only:stop-datawarehouse-only
+down-with-datawarehouse:stop-with-datawarehouse
 
 stop:
 	@echo "Stopping containers for $(PROJECT_NAME)..."
-	@docker-compose stop
+	@docker-compose -f docker-compose.yml stop
+
+stop-datawarehouse-only:
+	@echo "Stopping containers for $(PROJECT_NAME)..."
+	@docker-compose -f docker-compose-dw.yml stop
+
+stop-with-datawarehouse:
+	@echo "Stopping containers for $(PROJECT_NAME)..."
+	@docker-compose -f docker-compose.yml -f docker-compose-dw.yml stop
 
 logs:
 	@echo "Stopping containers for $(PROJECT_NAME)..."
-	@docker-compose logs -f
+	@docker-compose -f docker-compose.yml logs -f
 
 build:
 	@echo "Stopping containers for $(PROJECT_NAME)..."
-	@docker-compose build
+	@docker-compose -f docker-compose.yml build
 
 prune:
 	@echo "Removing containers for $(PROJECT_NAME)..."
-	@docker-compose down -v
+	@docker-compose -f docker-compose.yml down -v
 
 ps:
 	@docker ps --filter name='$(PROJECT_NAME)*'
@@ -57,5 +71,3 @@ install:
 
 reload-nginx:
 	docker exec -ti  $(PROJECT_NAME)_nginx nginx -s reload
-
-
