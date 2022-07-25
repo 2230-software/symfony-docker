@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-buster
+FROM php:8.1-fpm-buster
 ARG TIMEZONE
 
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
@@ -19,13 +19,12 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxslt1-dev \
     acl \
-    libpq-dev \
     && echo 'alias sf="php bin/console"' >> ~/.bashrc
 
 RUN docker-php-ext-configure gd --with-jpeg --with-freetype 
 
 RUN docker-php-ext-install \
-    pdo pdo_mysql pdo_pgsql zip xsl gd intl opcache exif mbstring
+    pdo pdo_mysql zip xsl gd intl opcache exif mbstring
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone \
@@ -40,5 +39,5 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony/b
 RUN git config --global user.email "${GIT_MAIL}"
 
 RUN apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql
+
 WORKDIR /var/www/symfony
-#RUN symfony new ${PROJECT_NAME} --dir=.
