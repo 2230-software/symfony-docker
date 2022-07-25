@@ -1,13 +1,13 @@
-# 🐳 Docker + PHP 7.4 + MySQL + Nginx + Symfony 5 Boilerplate
+# 🐳 Docker + PHP 7.4 + MySQL + Nginx + Symfony 6.1 Boilerplate
 
 ## Description
 
-This is a complete stack for running Symfony 5 into Docker containers using docker-compose tool.
+This is a complete stack for running Symfony 6 into Docker containers using docker-compose tool.
 
 It is composed by 3 containers:
 
 - `nginx`, acting as the webserver.
-- `php`, the PHP-FPM container with the 7.4 PHPversion.
+- `php`, the PHP-FPM container with the 8.1 PHPversion.
 - `db` which is the MySQL database container with a **MySQL 8.0** image.
 
 ## Installation
